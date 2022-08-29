@@ -347,6 +347,11 @@ func structToSchema(ctx *schemaContext, structType *ast.StructType) *apiext.JSON
 			continue
 		}
 
+		// Skip the field if it has a marker for a FeatureSet that is not the FeatureSet we're generating for.
+		if !mayHandleField(field) {
+			continue
+		}
+
 		jsonTag, hasTag := field.Tag.Lookup("json")
 		if !hasTag {
 			// if the field doesn't have a JSON tag, it doesn't belong in output (and shouldn't exist in a serialized type)
